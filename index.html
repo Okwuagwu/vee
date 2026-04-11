@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Todo Card</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    article {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin: 0 0 10px;
+    }
+
+    .done h2 {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+
+    .high { background: #ffdddd; color: #a00; }
+    .status { background: #eee; }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      background: #ddd;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:focus {
+      outline: 2px solid blue;
+    }
+
+    @media (max-width: 480px) {
+      article {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<article data-testid="test-todo-card" id="card">
+  
+  <label>
+    <input 
+      type="checkbox" 
+      data-testid="test-todo-complete-toggle" 
+      id="checkbox"
+    />
+    Mark as complete
+  </label>
+
+  <h2 data-testid="test-todo-title">
+    Build Todo Card UI
+  </h2>
+
+  <p data-testid="test-todo-description">
+    Create a clean, accessible and responsive todo component for testing.
+  </p>
+
+  <span 
+    class="badge high" 
+    data-testid="test-todo-priority"
+    aria-label="High priority"
+  >
+    High
+  </span>
+
+  <span 
+    class="badge status" 
+    data-testid="test-todo-status"
+    id="status"
+  >
+    Pending
+  </span>
+
+  <p>
+    <time 
+      data-testid="test-todo-due-date" 
+      datetime="2026-03-01T18:00:00Z"
+    >
+      Due Mar 1, 2026
+    </time>
+  </p>
+
+  <p 
+    data-testid="test-todo-time-remaining" 
+    id="timeRemaining"
+  ></p>
+
+  <div 
+    class="tags" 
+    role="list" 
+    data-testid="test-todo-tags"
+  >
+    <span class="tag" data-testid="test-todo-tag-work">work</span>
+    <span class="tag" data-testid="test-todo-tag-urgent">urgent</span>
+    <span class="tag">design</span>
+  </div>
+
+  <div class="actions">
+    <button 
+      data-testid="test-todo-edit-button"
+      aria-label="Edit task"
+      onclick="editTask()"
+    >
+      Edit
+    </button>
+
+    <button 
+      data-testid="test-todo-delete-button"
+      aria-label="Delete task"
+      onclick="deleteTask()"
+    >
+      Delete
+    </button>
+  </div>
+
+</article>
+
+<script>
+  const dueDate = new Date("2026-03-01T18:00:00Z");
+  const timeEl = document.getElementById("timeRemaining");
+
+  function updateTime() {
+    const now = new Date();
+    const diff = dueDate - now;
+
+    if (diff <= 0) {
+      timeEl.textContent = "Overdue!";
+      return;
+    }
+
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      timeEl.textContent = `Due in ${days} day(s)`;
+    } else if (hours > 0) {
+      timeEl.textContent = `Due in ${hours} hour(s)`;
+    } else {
+      timeEl.textContent = `Due in ${minutes} minute(s)`;
+    }
+  }
+
+  updateTime();
+  setInterval(updateTime, 60000);
+
+  const checkbox = document.getElementById("checkbox");
+  const card = document.getElementById("card");
+  const status = document.getElementById("status");
+
+  checkbox.addEventListener("change", () => {
+    if (checkbox.checked) {
+      card.classList.add("done");
+      status.textContent = "Done";
+    } else {
+      card.classList.remove("done");
+      status.textContent = "Pending";
+    }
+  });
+
+  function editTask() {
+    console.log("edit clicked");
+  }
+
+  function deleteTask() {
+    alert("Delete clicked");
+  }
+</script>
+
+</body>
+</html>
